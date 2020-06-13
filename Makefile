@@ -8,16 +8,27 @@ VFLAGS = --tool=memcheck --leak-check=full --track-origins=yes --gen-suppression
 SERVER_SRC = $(shell find src/server/ -name '*.cpp')
 SERVER_BIN = server
 
-# General rules
-all: build_server
+# Client variables
+CLIENT_SRC = $(shell find src/client/ -name '*.cpp')
+CLIENT_BIN = client
 
-build_server: $(SERVER_SRC) $(LOGGER_SRC)
+# General rules
+all: build_server build_client
+
+build_server: $(SERVER_SRC)
 	$(CPPC) -o $(SERVER_BIN) $(CFLAGS) $^
+
+build_client: $(CLIENT_SRC)
+	$(CPPC) -o $(CLIENT_BIN) $(CFLAGS) $^
+
+clean:
+	rm -rf $(SERVER_BIN) $(CLIENT_BIN)
 
 # Custom rules
 debug_server: $(SERVER_SRC)
 	$(CPPC) -o $(SERVER_BIN) $(DFLAGS) $^
 	valgrind $(VFLAGS) ./$(SERVER_BIN)
 
-clean:
-	rm -rf $(SERVER_BIN)
+debug_client: $(CLIENT_SRC)
+	$(CPPC) -o $(CLIENT_BIN) $(DFLAGS) $^
+	valgrind $(VFLAGS) ./$(CLIENT_BIN)
