@@ -89,6 +89,7 @@ void Server::start() {
 
 				if(strcmp(buffer, "exit") == 0) {
 					printf("Closing server and its connections...\n");
+
 					running = false;
 					break;
 				}
@@ -118,7 +119,34 @@ void Server::start() {
 				continue;
 			}
 
-			// Receive messages from connected clients
+			// Get information about the current client
+			clientAddrLen = sizeof(struct sockaddr_in);
+			getpeername(i, (struct sockaddr *)&clientAddr, &clientAddrLen);
+
+			// Receive messages from the current client
+			memset(buffer, 0, buffLen);
+			size_t recvBytes = recv(i, buffer, buffLen, 0);
+
+			if(recvBytes < 0) {
+				printf("Could not receive message from %s:%d\n",
+					   inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+				continue;
+			}
+
+			// Client has disconnected
+			if(recvBytes == 0) {
+				printf("Client from %s:%d has disconnected\n",
+					   inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+
+				FD_CLR(i, &readFds);
+				close(i);
+				continue;
+			}
+
+			// Interpret user message
+			printf("Client from %s:%d sent: \n%s\n",
+				   inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port),
+				   buffer);
 		}
 	}
 

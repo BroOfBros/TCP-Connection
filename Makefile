@@ -21,6 +21,12 @@ build_server: $(SERVER_SRC)
 build_client: $(CLIENT_SRC)
 	$(CPPC) -o $(CLIENT_BIN) $(CFLAGS) $^
 
+run_server: build_server
+	./$(SERVER_BIN)
+
+run_client: build_client
+	./$(CLIENT_BIN)
+
 clean:
 	rm -rf $(SERVER_BIN) $(CLIENT_BIN)
 

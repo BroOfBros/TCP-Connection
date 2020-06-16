@@ -91,10 +91,39 @@ void Client::connectTo(const char *ip, uint16_t port) {
 					break;
 				}
 
+				if(strcmp(buffer, "cmd") == 0) {
+					printf("Waiting for your command...\n");
+					getLn(buffer);
+
+					if(send(sockFd, buffer, strlen(buffer), 0) < 0) {
+						perror("Client could not send the previous command");
+					}
+
+					continue;
+				}
+
 				continue;
 			}
 
 			// Receive messages from server
+			memset(buffer, 0, buffLen);
+			size_t recvBytes = recv(i, buffer, buffLen, 0);
+
+			if(recvBytes < 0) {
+				printf("Could not receive message from server\n");
+				continue;
+			}
+
+			// Server has shutdown
+			if(recvBytes == 0) {
+				printf("Server is offline\n");
+
+				connected = false;
+				continue;
+			}
+
+			// Interpret server message
+			printf("Server sent: \n%s\n", buffer);
 		}
 	}
 
