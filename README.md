@@ -11,7 +11,7 @@ To use the debug mode you need to have valgrind previously installed.
 To keep it simple, the only server command is `exit`, which closes the server and all the  
 connected clients. Please note that the server might go into a `TIME_WAIT` state if a client  
 closes after the server, in which case you have to wait a few seconds before attempting to  
-restart the server. You will observer this behaviour upon receiving the `Address is allready in use`  
+restart the server. You will observe this behaviour upon receiving the `Address is already in use`  
 message.  
 
 # Client interaction
