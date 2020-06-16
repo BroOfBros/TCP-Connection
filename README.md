@@ -1,4 +1,4 @@
-# TCP_Connection
+# TCP-Connection
 A simple client-server application with I/O multiplexing.  
 This is just an example of C socket programming.  
 
