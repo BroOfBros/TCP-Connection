@@ -18,3 +18,6 @@ message.
 The command to close a client is `disconnect`.  
 In order to send a message to the server, you have to issue the `cmd` command. Then, you enter the  
 message you wish to send to the server.
+
+### Other
+TODO: Windows port.
